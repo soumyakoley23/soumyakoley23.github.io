@@ -1,0 +1,1502 @@
+<!doctype html>
+<html lang="bn">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>CalcMate Pro</title>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-xxxxxxxxxxxxxxxx"
+     crossorigin="anonymous"></script>
+    <style>
+        :root{font-family:system-ui,Segoe UI,Roboto,"Noto Sans Bengali",sans-serif}
+        body{margin:0;background:#f7f8fb;color:#111}
+        header{background:#2f6fed;color:white;padding:14px 16px;font-size:20px; display: flex; flex-direction: column; align-items: flex-start; }
+        header .title-container { display: flex; justify-content: space-between; width: 100%; align-items: center; }
+        header .author-name { font-size: 14px; align-self: flex-end; margin-top: 4px; }
+        .lang-switcher button { background: transparent; border: 1px solid white; color: white; padding: 5px 10px; cursor: pointer; border-radius: 4px; margin-left: 5px; }
+        .lang-switcher button.active { background: white; color: #2f6fed; }
+        .container{display:flex;gap:16px;padding:16px;flex-wrap:wrap}
+        nav{min-width:200px;background:#fff;border-radius:8px;box-shadow:0 1px 4px rgba(0,0,0,.08);padding:12px; height: fit-content; }
+        nav button{display:block;width:100%;text-align:left;padding:10px;border:0;background:transparent;border-radius:6px;margin-bottom:6px;cursor:pointer}
+        nav button.active{background:#eef5ff}
+        main{flex:1;min-width:300px;background:#fff;border-radius:8px;padding:16px;box-shadow:0 1px 6px rgba(0,0,0,.06)}
+        .card{margin-bottom:12px}
+        label{display:block;margin:6px 0 4px;font-size:14px}
+        input,select{width:100%;padding:8px;border:1px solid #d7dce6;border-radius:6px;font-size:15px}
+        .row{display:flex;gap:8px}
+        .row > *{flex:1}
+        .btn{margin-top:10px;padding:10px 12px;border:0;background:#2f6fed;color:white;border-radius:6px;cursor:pointer}
+        .result{margin-top:10px;padding:12px;background:#f1f6ff;border-left:4px solid #2f6fed;border-radius:6px}
+        .small{font-size:13px;color:#555}
+        @media(max-width:720px){.container{flex-direction:column}nav{order:2}}
+        
+        /* Basic and Scientific Calculator Styles */
+        #basic-calculator, #scientific-calculator {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            text-align: center;
+        }
+        #basic-calculator .display, #scientific-calculator .display {
+            grid-column: 1 / -1;
+            background: #eef5ff;
+            font-size: 2em;
+            padding: 10px;
+            border-radius: 6px;
+            text-align: right;
+            min-height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            word-wrap: break-word;
+            word-break: break-all;
+        }
+        #basic-calculator button, #scientific-calculator button {
+            padding: 20px;
+            font-size: 1.2em;
+            background: #f7f8fb;
+            border: 1px solid #d7dce6;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        #basic-calculator button:hover, #scientific-calculator button:hover {
+            background: #e0e6f0;
+        }
+        #scientific-calculator button.wide {
+            grid-column: span 2;
+        }
+        #basic-calculator button.operator, #scientific-calculator button.operator {
+            background: #2f6fed;
+            color: white;
+            font-weight: bold;
+        }
+        #basic-calculator button.equal, #scientific-calculator button.equal {
+            background: #28a745;
+            color: white;
+            font-weight: bold;
+        }
+        #basic-calculator button.clear, #scientific-calculator button.clear {
+            background: #dc3545;
+            color: white;
+            font-weight: bold;
+        }
+        #scientific-calculator button.fn {
+            background: #ffc107;
+            color: #333;
+        }
+        .two-column-card {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        /* Blog styles */
+        .blog-post {
+            border-bottom: 1px solid #d7dce6;
+            padding-bottom: 12px;
+            margin-bottom: 12px;
+        }
+        .blog-post:last-child {
+            border-bottom: none;
+        }
+        .blog-post h3 {
+            margin: 0 0 5px 0;
+        }
+        .blog-post a {
+            text-decoration: none;
+            color: #2f6fed;
+            font-size: 18px;
+        }
+        .blog-post p {
+            margin: 0;
+            color: #555;
+        }
+        
+        /* About & Contact Page Styles */
+        .page-content {
+            padding: 20px;
+            text-align: justify;
+        }
+        .page-content h1, .page-content h2 {
+            color: #2f6fed;
+            text-align: center;
+        }
+        .contact-form {
+            max-width: 500px;
+            margin: 20px auto;
+            padding: 20px;
+            border: 1px solid #d7dce6;
+            border-radius: 8px;
+        }
+        .contact-form label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .contact-form input, .contact-form textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #d7dce6;
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+        .contact-form button {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            background: #2f6fed;
+            color: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .contact-form button:hover {
+            background: #2855b3;
+        }
+        .social-links {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .social-links a {
+            margin: 0 10px;
+            color: #555;
+            text-decoration: none;
+        }
+    </style>
+
+    <meta name="description" content="CalcMate Pro - All-in-one Calculator for Basic, Scientific, EMI, BMI, BMR, Age, GST, Unit Conversions and more. Free online calculator tool.">
+    <meta name="keywords" content="calculator, online calculator, EMI calculator, BMI calculator, GST calculator, scientific calculator, free calculator, unit converter">
+    <meta name="author" content="Soumya Koley">
+    <meta name="robots" content="index, follow">
+
+    <link rel="icon" type="image/png" href="favicon.png">
+
+    <meta property="og:title" content="CalcMate Pro - All-in-one Calculator">
+    <meta property="og:description" content="Free web-based calculator combining Basic, Scientific, EMI, BMI, GST, BMR, Age, Discount, Unit Conversions & more.">
+    <meta property="og:image" content="https://soumyakoley23.github.io/CalcMate-Pro/calcmatepro_preview.png">
+    <meta property="og:url" content="https://soumyakoley23.github.io/CalcMate-Pro/">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-B4MMJG3W9N"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-B4MMJG3W9N');
+</script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "CalcMate Pro",
+      "url": "https://soumyakoley23.github.io/CalcMate-Pro/",
+      "applicationCategory": "Calculator",
+      "operatingSystem": "All",
+      "description": "All-in-one online calculator for Basic, Scientific, EMI, BMI, GST, BMR, Age, Unit Conversions and more.",
+      "creator": {
+        "@type": "Person",
+        "name": "Soumya Koley"
+      }
+    }
+    </script>
+
+</head>
+<body>
+    <header>
+        <div class="title-container">
+            <span id="main-header">CalcMate Pro</span>
+            <div class="lang-switcher">
+                <button data-lang="en" class="active">English</button>
+                <button data-lang="bn">বাংলা</button>
+            </div>
+        </div>
+        <span class="author-name">© 2025 — Created by Soumya Koley</span>
+    </header>
+    <div class="container">
+        <nav id="menu">
+            <button data-cal="basic" class="active" data-text-key="basic_btn">Basic Calculator</button>
+            <button data-cal="scientific" data-text-key="scientific_btn">Scientific Calculator</button>
+            <button data-cal="emi" data-text-key="emi_btn">EMI Calculator</button>
+            <button data-cal="bmi" data-text-key="bmi_btn">BMI</button>
+            <button data-cal="bmr" data-text-key="bmr_btn">BMR</button>
+            <button data-cal="age" data-text-key="age_btn">Age Calculator</button>
+            <button data-cal="gst" data-text-key="gst_btn">GST/VAT Calculator</button>
+            <button data-cal="discount" data-text-key="discount_btn">Discount</button>
+            <button data-cal="simple-interest" data-text-key="si_btn">Simple Interest</button>
+            <button data-cal="tip" data-text-key="tip_btn">Tip Calculator</button>
+            <button data-cal="temp" data-text-key="temp_btn">Temperature</button>
+            <button data-cal="length" data-text-key="length_btn">Length</button>
+            <button data-cal="area" data-text-key="area_btn">Area</button>
+            <button data-cal="volume" data-text-key="volume_btn">Volume</button>
+            <button data-cal="mass" data-text-key="mass_btn">Mass</button>
+            <button data-cal="speed" data-text-key="speed_btn">Speed</button>
+            <button data-cal="data" data-text-key="data_btn">Data Size</button>
+            <hr style="margin: 10px 0; border: none; border-top: 1px solid #d7dce6;">
+            <button data-cal="blog" data-text-key="blog_btn">Blog</button>
+            <button data-cal="about" data-text-key="about_btn">About Us</button>
+            <button data-cal="contact" data-text-key="contact_btn">Contact Us</button>
+        </nav>
+        <main id="main"></main>
+    </div>
+
+    <div style="margin:20px auto; text-align:center;">
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-xxxxxxxxxxxxxxxx"
+             data-ad-slot="1234567890"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+        <script>
+             (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+    </div>
+
+    <footer style="text-align: center; padding: 16px; font-size: 14px; color: #555;">
+        <p>© 2025 Soumya Koley. All Rights Reserved. <a href="privacy.html" style="margin-left: 10px;">Privacy Policy</a></p>
+    </footer>
+
+    <script>
+        let currentLang = 'en';
+
+        const translations = {
+            en: {
+                header: "CalcMate Pro",
+                basic_btn: "Basic Calculator",
+                scientific_btn: "Scientific Calculator",
+                emi_btn: "EMI Calculator",
+                bmi_btn: "BMI",
+                bmr_btn: "BMR",
+                age_btn: "Age Calculator",
+                gst_btn: "GST/VAT Calculator",
+                discount_btn: "Discount",
+                si_btn: "Simple Interest",
+                tip_btn: "Tip Calculator",
+                temp_btn: "Temperature",
+                length_btn: "Length",
+                area_btn: "Area",
+                volume_btn: "Volume",
+                mass_btn: "Mass",
+                speed_btn: "Speed",
+                data_btn: "Data Size",
+                blog_btn: "Blog",
+                about_btn: "About Us",
+                contact_btn: "Contact Us",
+
+                // Calculator Descriptions
+                basic_desc: "Perform fundamental mathematical operations like addition, subtraction, multiplication, and division.",
+                scientific_desc: "A powerful calculator with scientific functions like trigonometry, logarithms, and more.",
+                emi_desc: "Use this calculator to find out your monthly EMI, total interest, and total payable amount for a loan.",
+                bmi_desc: "Find your Body Mass Index (BMI) quickly and easily.",
+                bmr_desc: "Calculate your Basal Metabolic Rate (BMR) to understand your daily calorie needs.",
+                age_desc: "This calculator helps you to find your age in years, months, and days from a given date.",
+                gst_desc: "Add or remove GST/VAT from a base amount to find the gross or net price.",
+                discount_desc: "Calculate the final price and discount amount for a product.",
+                si_desc: "Calculate the simple interest and total amount for a loan.",
+                tip_desc: "Calculate the tip amount and total bill, with an option to split among multiple people.",
+                temp_desc: "Convert temperature values between Celsius, Fahrenheit, and Kelvin.",
+                length_desc: "Convert length values between various units like meters, feet, inches, and more.",
+                area_desc: "Convert area values between square meters, square feet, acres, and other units.",
+                volume_desc: "Convert volume values between cubic meters, liters, gallons, and other units.",
+                mass_desc: "Convert mass values between kilograms, pounds, grams, and other units.",
+                speed_desc: "Convert speed values between kilometers per hour, miles per hour, and meters per second.",
+                data_desc: "Convert digital data sizes between bits, bytes, kilobytes, and more.",
+
+                // Blog Page Content
+                blog_title: "Explore Our Blog",
+                blog_desc: "Read our articles on various calculation tips, financial planning, and health insights to make your life easier.",
+                blog_post_emi_title: "What is EMI and How Does it Work?",
+                blog_post_emi_p: "In this article, we will discuss EMI in detail and explain its calculation method in a simple way.",
+                blog_post_bmi_title: "How to Accurately Determine Your BMI",
+                blog_post_bmi_p: "This post explains why BMI is important and what its correct calculation method is.",
+                blog_post_age_title: "Calculating Age from Date of Birth",
+                blog_post_age_p: "Learn about the method to accurately determine age from your date of birth using our calculator.",
+                blog_post_cal_desc: "Learn about the importance of our calculators and how to use them effectively for your daily needs.",
+                blog_post_cal_title: "The Ultimate Guide to All Our Calculators",
+                blog_post_gst_title: "GST/VAT: A Simple Guide to Tax Calculation",
+                blog_post_gst_p: "Understand how to add or remove GST/VAT from a base amount with ease using our calculator.",
+                blog_post_discount_title: "Smart Shopping: How to Calculate Discounts",
+                blog_post_discount_p: "Never get confused by discounts again. Learn how to quickly calculate the final price of a product.",
+                blog_post_si_title: "Simple Interest Explained: A Quick Look",
+                blog_post_si_p: "An easy-to-understand guide on how simple interest works and how to calculate it for loans or investments.",
+                blog_post_tip_title: "Splitting the Bill Made Easy with Our Tip Calculator",
+                blog_post_tip_p: "Learn how to effortlessly calculate and split the tip and total bill among your friends.",
+                blog_post_bmr_title: "BMR: Understanding Your Daily Calorie Needs",
+                blog_post_bmr_p: "This article explains how to calculate your Basal Metabolic Rate (BMR) and why it's important for your health goals.",
+                blog_post_unit_title: "Your Guide to Unit Conversions",
+                blog_post_unit_p: "A comprehensive guide on how to use our various unit converters for length, weight, temperature, and more.",
+                blog_post_scientific_title: "Unlocking the Power of the Scientific Calculator",
+                blog_post_scientific_p: "From trigonometry to logarithms, discover how our scientific calculator can help you with complex math problems.",
+
+                about_title: "The Story of CalcMate Pro",
+                about_p1: "CalcMate Pro is an online platform created with the mission to simplify and automate calculations. Our goal is to provide users with a fast, accurate, and reliable collection of calculators, making complex calculations for daily life or professional work easy.",
+                about_p2: "On this website, you will find all the necessary tools, from basic math to scientific calculations, EMI, BMI, GST/VAT, and various unit conversions. We have considered all types of users—students, professionals, and general users—to ensure everyone can easily find the solution they need.",
+                about_p3: "The CalcMate Pro project is created and maintained by <strong>Soumya Koley</strong>. We are constantly striving to add new features and improve the user experience. Your feedback is extremely important to us, as it helps us make the website even better.",
+                about_p4: "Thank you for being with us!",
+
+                contact_page_title: "Contact Us",
+                contact_form_title: "Contact Form",
+                contact_form_p: "Please fill out the form below to send your message to us via email.",
+                contact_name: "Name:",
+                contact_email: "Email:",
+                contact_message: "Message:",
+                contact_send_btn: "Send",
+                contact_other_ways_title: "Follow Us",
+                contact_other_ways_p: "You can also send us a message on our social media.",
+
+                emi_title: "EMI Calculator",
+                emi_principal: "Principal Amount",
+                emi_principal_ph: "e.g., 500000",
+                emi_rate: "Annual Interest Rate (%)",
+                emi_rate_ph: "e.g., 7.5",
+                emi_tenure: "Tenure (months)",
+                emi_tenure_ph: "e.g., 60",
+                emi_calc_btn: "Calculate",
+                emi_err: "Please enter all inputs correctly",
+                emi_monthly: "Monthly EMI:",
+                emi_total: "Total Payable:",
+                emi_interest: "Total Interest:",
+
+                bmi_title: "BMI Calculator",
+                bmi_weight: "Weight (kg)",
+                bmi_weight_ph: "68",
+                bmi_height: "Height (cm)",
+                bmi_height_ph: "170",
+                bmi_calc_btn: "Calculate",
+                bmi_err: "Please fill in all inputs",
+                bmi_underweight: "Underweight",
+                bmi_normal: "Normal",
+                bmi_overweight: "Overweight",
+                bmi_obese: "Obese",
+
+                bmr_title: "BMR Calculator",
+                bmr_weight: "Weight (kg)",
+                bmr_height: "Height (cm)",
+                bmr_age: "Age",
+                bmr_gender: "Gender",
+                bmr_male: "Male",
+                bmr_female: "Female",
+                bmr_calc_btn: "Calculate",
+                bmr_err: "Please enter all inputs correctly",
+                bmr_result: "Your BMR is:",
+
+                age_title: "Age Calculator",
+                age_dob: "Date of Birth",
+                age_today: "Today's Date",
+                age_calc_btn: "Calculate",
+                age_err: "Please enter a valid date",
+                age_result: "You are {years} years, {months} months, and {days} days old.",
+
+                gst_title: "GST/VAT Calculator",
+                gst_amount: "Amount",
+                gst_rate: "GST/VAT Rate (%)",
+                gst_add: "Add GST/VAT",
+                gst_remove: "Remove GST/VAT",
+                gst_calc_btn: "Calculate",
+                gst_err: "Please enter a valid amount and rate",
+                gst_net: "Net Amount:",
+                gst_total: "Total Amount:",
+                gst_gst_amount: "GST/VAT Amount:",
+
+                discount_title: "Discount Calculator",
+                discount_price: "Original Price",
+                discount_percent: "Discount (%)",
+                discount_percent_ph: "15",
+                discount_calc_btn: "Calculate",
+                discount_err: "Please enter correct inputs",
+                discount_final: "Final Price after Discount:",
+                discount_amount: "Discount Amount:",
+
+                si_title: "Simple Interest Calculator",
+                si_principal: "Principal Amount",
+                si_rate: "Annual Interest Rate (%)",
+                si_time: "Time (Years)",
+                si_calc_btn: "Calculate",
+                si_err: "Please enter all inputs correctly",
+                si_interest: "Total Interest:",
+                si_total: "Total Amount:",
+
+                tip_title: "Tip Calculator",
+                tip_bill: "Bill Amount",
+                tip_tip_per: "Tip Percentage (%)",
+                tip_split: "Split Bill with (No. of people)",
+                tip_calc_btn: "Calculate",
+                tip_err: "Please enter correct inputs",
+                tip_amount: "Tip Amount:",
+                tip_total_bill: "Total Bill (with tip):",
+                tip_per_person: "Amount Per Person:",
+
+                conv_val: "Value",
+                conv_from: "From",
+                conv_to: "To",
+                conv_calc_btn: "Convert",
+                conv_err: "Please enter a value",
+            },
+            bn: {
+                header: "ক্যালকমেট প্রো",
+                basic_btn: "সাধারণ ক্যালকুলেটর",
+                scientific_btn: "বৈজ্ঞানিক ক্যালকুলেটর",
+                emi_btn: "ইএমআই ক্যালকুলেটর",
+                bmi_btn: "বিএমআই",
+                bmr_btn: "বিএমআর",
+                age_btn: "বয়স ক্যালকুলেটর",
+                gst_btn: "জিএসটি/ভ্যাট ক্যালকুলেটর",
+                discount_btn: "ডিসকাউন্ট",
+                si_btn: "সাধারণ সুদ",
+                tip_btn: "টিপ ক্যালকুলেটর",
+                temp_btn: "তাপমাত্রা",
+                length_btn: "দৈর্ঘ্য",
+                area_btn: "ক্ষেত্রফল",
+                volume_btn: "আয়তন",
+                mass_btn: "ওজন",
+                speed_btn: "গতি",
+                data_btn: "ডেটা সাইজ",
+                blog_btn: "ব্লগ",
+                about_btn: "আমাদের সম্পর্কে",
+                contact_btn: "যোগাযোগ",
+                
+                // Calculator Descriptions
+                basic_desc: "যোগ,বিয়োগ,গুণ এবং ভাগের মতো মৌলিক গাণিতিক ক্রিয়াকলাপ সম্পাদন করুন।",
+                scientific_desc: "ত্রিকোণমিতি, লগারিদম এবং আরও অনেক কিছুর মতো বৈজ্ঞানিক ফাংশন সহ একটি শক্তিশালী ক্যালকুলেটর।",
+                emi_desc: "এই ক্যালকুলেটরটি ব্যবহার করে আপনার ঋণের মাসিক EMI, মোট সুদ, এবং মোট প্রদেয় পরিমাণ নির্ণয় করুন।",
+                bmi_desc: "আপনার বডি মাস ইনডেক্স (BMI) সহজে এবং দ্রুত নির্ণয় করুন।",
+                bmr_desc: "আপনার দৈনিক ক্যালরির চাহিদা বোঝার জন্য বেসাল মেটাবলিক রেট (BMR) গণনা করুন।",
+                age_desc: "এই ক্যালকুলেটরটি আপনাকে একটি নির্দিষ্ট তারিখ থেকে আপনার বয়স বছর, মাস এবং দিনে খুঁজে বের করতে সাহায্য করে।",
+                gst_desc: "মোট বা নেট মূল্য খুঁজে পেতে একটি মূল পরিমাণের সাথে GST/VAT যোগ বা বিয়োগ করুন।",
+                discount_desc: "একটি পণ্যের চূড়ান্ত মূল্য এবং ছাড়ের পরিমাণ গণনা করুন।",
+                si_desc: "একটি ঋণের জন্য সাধারণ সুদ এবং মোট পরিমাণ গণনা করুন।",
+                tip_desc: "টিপের পরিমাণ এবং মোট বিল গণনা করুন, একাধিক মানুষের মধ্যে ভাগ করার বিকল্প সহ।",
+                temp_desc: "সেলসিয়াস, ফারেনহাইট এবং কেলভিনের মধ্যে তাপমাত্রা রূপান্তর করুন।",
+                length_desc: "মিটার, ফুট, ইঞ্চি এবং অন্যান্য ইউনিটের মধ্যে দৈর্ঘ্যের মান রূপান্তর করুন।",
+                area_desc: "বর্গ মিটার, বর্গ ফুট, একর এবং অন্যান্য ইউনিটের মধ্যে ক্ষেত্রফলের মান রূপান্তর করুন।",
+                volume_desc: "ঘন মিটার, লিটার, গ্যালন এবং অন্যান্য ইউনিটের মধ্যে আয়তনের মান রূপান্তর করুন।",
+                mass_desc: "কিলোগ্রাম, পাউন্ড, গ্রাম এবং অন্যান্য ইউনিটের মধ্যে ওজনের মান রূপান্তর করুন।",
+                speed_desc: "কিলোমিটার প্রতি ঘন্টা, মাইল প্রতি ঘন্টা এবং মিটার প্রতি সেকেন্ডের মধ্যে গতির মান রূপান্তর করুন।",
+                data_desc: "বিট, বাইট, কিলোবাইট এবং আরও অনেক কিছুর মধ্যে ডিজিটাল ডেটার আকার রূপান্তর করুন।",
+
+                // Blog Page Content
+                blog_title: "আমাদের ব্লগ পড়ুন",
+                blog_desc: "আমাদের বিভিন্ন ক্যালকুলেশন টিপস, আর্থিক পরিকল্পনা এবং স্বাস্থ্য সম্পর্কিত নিবন্ধগুলি পড়ুন।",
+                blog_post_emi_title: "EMI কি এবং কীভাবে কাজ করে?",
+                blog_post_emi_p: "এই আর্টিকেলে আমরা EMI-এর বিস্তারিত আলোচনা করব এবং এর গণনা পদ্ধতি সহজভাবে বোঝাব।",
+                blog_post_bmi_title: "আপনার BMI সঠিকভাবে নির্ণয়ের উপায়",
+                blog_post_bmi_p: "BMI কেন গুরুত্বপূর্ণ এবং এর সঠিক গণনা পদ্ধতি কী, তা এই পোস্টে তুলে ধরা হয়েছে।",
+                blog_post_age_title: "বয়স ক্যালকুলেটরের মাধ্যমে জন্ম তারিখের হিসাব",
+                blog_post_age_p: "জন্ম তারিখ থেকে নির্ভুলভাবে বয়স নির্ণয়ের পদ্ধতি সম্পর্কে জানুন।",
+                blog_post_cal_desc: "আমাদের ক্যালকুলেটরগুলির গুরুত্ব এবং কীভাবে এগুলি আপনার দৈনন্দিন প্রয়োজনে কার্যকরভাবে ব্যবহার করবেন তা জানুন।",
+                blog_post_cal_title: "আমাদের সব ক্যালকুলেটরের সম্পূর্ণ গাইড",
+                blog_post_gst_title: "জিএসটি/ভ্যাট: কর গণনার একটি সহজ নির্দেশিকা",
+                blog_post_gst_p: "আমাদের ক্যালকুলেটর ব্যবহার করে কীভাবে সহজে একটি মূল পরিমাণের সাথে জিএসটি/ভ্যাট যোগ বা বাদ দেবেন তা বুঝুন।",
+                blog_post_discount_title: "স্মার্ট শপিং: ডিসকাউন্ট কীভাবে হিসাব করবেন",
+                blog_post_discount_p: "ছাড়ের হিসাব নিয়ে আর কখনও বিভ্রান্ত হবেন না। একটি পণ্যের চূড়ান্ত মূল্য দ্রুত গণনা করা শিখুন।",
+                blog_post_si_title: "সাধারণ সুদের সহজ ব্যাখ্যা: একটি সংক্ষিপ্ত পর্যালোচনা",
+                blog_post_si_p: "সাধারণ সুদ কীভাবে কাজ করে এবং ঋণ বা বিনিয়োগের জন্য কীভাবে এটি গণনা করা যায় তার একটি সহজ নির্দেশিকা।",
+                blog_post_tip_title: "আমাদের টিপ ক্যালকুলেটরের মাধ্যমে বিল ভাগ করা সহজ",
+                blog_post_tip_p: "কীভাবে সহজে বন্ধুদের মধ্যে টিপ এবং মোট বিল গণনা ও ভাগ করবেন তা শিখুন।",
+                blog_post_bmr_title: "বিএমআর: আপনার দৈনিক ক্যালরি চাহিদা বুঝুন",
+                blog_post_bmr_p: "এই নিবন্ধটি ব্যাখ্যা করে কীভাবে আপনার বেসাল মেটাবলিক রেট (BMR) গণনা করবেন এবং কেন এটি আপনার স্বাস্থ্যের লক্ষ্যের জন্য গুরুত্বপূর্ণ।",
+                blog_post_unit_title: "ইউনিট রূপান্তরের জন্য আপনার নির্দেশিকা",
+                blog_post_unit_p: "দৈর্ঘ্য, ওজন, তাপমাত্রা এবং আরও অনেক কিছুর জন্য আমাদের বিভিন্ন ইউনিট রূপান্তরকারী কীভাবে ব্যবহার করবেন তার একটি বিস্তারিত নির্দেশিকা।",
+                blog_post_scientific_title: "বৈজ্ঞানিক ক্যালকুলেটরের ক্ষমতা উন্মোচন",
+                blog_post_scientific_p: "ত্রিকোণমিতি থেকে লগারিদম পর্যন্ত, আবিষ্কার করুন কীভাবে আমাদের বৈজ্ঞানিক ক্যালকুলেটর আপনাকে জটিল গণিত সমস্যা সমাধানে সাহায্য করতে পারে।",
+
+                about_title: "ক্যালকমেট প্রো-এর গল্প",
+                about_p1: "ক্যালকমেট প্রো একটি অনলাইন প্ল্যাটফর্ম, যা গণনার কাজগুলোকে সহজ ও স্বয়ংক্রিয় করার উদ্দেশ্যে তৈরি করা হয়েছে। আমাদের লক্ষ্য হলো ব্যবহারকারীদের জন্য একটি দ্রুত, নির্ভুল এবং নির্ভরযোগ্য ক্যালকুলেটরের সংগ্রহ তৈরি করা, যাতে দৈনন্দিন জীবনে বা পেশাগত কাজে জটিল হিসাব-নিকাশ সহজ হয়ে যায়।",
+                about_p2: "এই ওয়েবসাইটে আপনি সাধারণ গণিত থেকে শুরু করে বৈজ্ঞানিক হিসাব, ইএমআই, বিএমআই, জিএসটি/ভ্যাট এবং বিভিন্ন এককের রূপান্তরের জন্য প্রয়োজনীয় সমস্ত টুল খুঁজে পাবেন। আমরা সব ধরনের ব্যবহারকারীর কথা মাথায় রেখেছি—শিক্ষার্থী, পেশাজীবী বা সাধারণ মানুষ—যাতে সবাই সহজেই তাদের প্রয়োজন অনুযায়ী সমাধান খুঁজে নিতে পারে।",
+                about_p3: "ক্যালকমেট প্রো প্রজেক্টটি <strong>Soumya Koley</strong> দ্বারা তৈরি এবং রক্ষণাবেক্ষণ করা হয়। আমরা নিরন্তর চেষ্টা করি নতুন ফিচার যোগ করতে এবং ব্যবহারকারীর অভিজ্ঞতা উন্নত করতে। আপনার মতামত আমাদের কাছে অত্যন্ত গুরুত্বপূর্ণ, কারণ এটি আমাদের ওয়েবসাইটকে আরও উন্নত করতে সাহায্য করে।",
+                about_p4: "আমাদের সাথে থাকার জন্য ধন্যবাদ!",
+                
+                contact_page_title: "যোগাযোগ করুন",
+                contact_form_title: "যোগাযোগের ফর্ম",
+                contact_form_p: "আপনার মেসেজ আমাদের ইমেলের মাধ্যমে পাঠানোর জন্য নিচের ফর্মটি পূরণ করুন।",
+                contact_name: "নাম:",
+                contact_email: "ইমেল:",
+                contact_message: "মেসেজ:",
+                contact_send_btn: "পাঠান",
+                contact_other_ways_title: "আমাদের অনুসরণ করুন",
+                contact_other_ways_p: "আপনি আমাদের সোশ্যাল মিডিয়াতেও মেসেজ পাঠাতে পারেন।",
+                
+                emi_title: "ইএমআই ক্যালকুলেটর",
+                emi_principal: "প্রধান পরিমান",
+                emi_principal_ph: "উদাহরণ: 500000",
+                emi_rate: "বার্ষিক সুদ (%)",
+                emi_rate_ph: "উদাহরণ: 7.5",
+                emi_tenure: "সময়কাল (মাস)",
+                emi_tenure_ph: "উদাহরণ: 60",
+                emi_calc_btn: "হিসাব করুন",
+                emi_err: "সব ইনপুট সঠিকভাবে দিন",
+                emi_monthly: "মাসিক EMI:",
+                emi_total: "মোট প্রদানযোগ্য:",
+                emi_interest: "মোট সুদ:",
+
+                bmi_title: "বিএমআই ক্যালকুলেটর",
+                bmi_weight: "ওজন (কেজি)",
+                bmi_weight_ph: "68",
+                bmi_height: "উচ্চতা (সেমি)",
+                bmi_height_ph: "170",
+                bmi_calc_btn: "হিসাব করুন",
+                bmi_err: "সব ইনপুট পূরণ করুন",
+                bmi_underweight: "ওজন কম",
+                bmi_normal: "স্বাভাবিক",
+                bmi_overweight: "ওজন বেশি",
+                bmi_obese: "অতিরিক্ত মোটা",
+
+                bmr_title: "বিএমআর ক্যালকুলেটর",
+                bmr_weight: "ওজন (কেজি)",
+                bmr_height: "উচ্চতা (সেমি)",
+                bmr_age: "বয়স",
+                bmr_gender: "লিঙ্গ",
+                bmr_male: "পুরুষ",
+                bmr_female: "মহিলা",
+                bmr_calc_btn: "হিসাব করুন",
+                bmr_err: "সব ইনপুট সঠিকভাবে দিন",
+                bmr_result: "আপনার BMR হল:",
+
+                age_title: "বয়স ক্যালকুলেটর",
+                age_dob: "জন্ম তারিখ",
+                age_today: "আজকের তারিখ",
+                age_calc_btn: "হিসাব করুন",
+                age_err: "একটি সঠিক তারিখ দিন",
+                age_result: "আপনার বয়স {years} বছর, {months} মাস, এবং {days} দিন।",
+
+                gst_title: "জিএসটি/ভ্যাট ক্যালকুলেটর",
+                gst_amount: "পরিমাণ",
+                gst_rate: "জিএসটি/ভ্যাট হার (%)",
+                gst_add: "জিএসটি/ভ্যাট যোগ করুন",
+                gst_remove: "জিএসটি/ভ্যাট বাদ দিন",
+                gst_calc_btn: "হিসাব করুন",
+                gst_err: "একটি সঠিক পরিমাণ এবং হার দিন",
+                gst_net: "মোট পরিমাণ (নেট):",
+                gst_total: "মোট পরিমাণ (টোটাল):",
+                gst_gst_amount: "জিএসটি/ভ্যাট পরিমাণ:",
+
+                discount_title: "ডিসকাউন্ট ক্যালকুলেটর",
+                discount_price: "মূল্য",
+                discount_percent: "ছাড় (%)",
+                discount_percent_ph: "15",
+                discount_calc_btn: "হিসাব করুন",
+                discount_err: "সঠিক ইনপুট দিন",
+                discount_final: "ছাড়ের পর মূল্য:",
+                discount_amount: "ডিসকাউন্ট:",
+
+                si_title: "সাধারণ সুদ ক্যালকুলেটর",
+                si_principal: "মূল টাকা",
+                si_rate: "বার্ষিক সুদের হার (%)",
+                si_time: "সময় (বছর)",
+                si_calc_btn: "হিসাব করুন",
+                si_err: "সব ইনপুট সঠিকভাবে দিন",
+                si_interest: "মোট সুদ:",
+                si_total: "মোট পরিমাণ:",
+
+                tip_title: "টিপ ক্যালকুলেটর",
+                tip_bill: "মোট বিল",
+                tip_tip_per: "টিপের শতাংশ (%)",
+                tip_split: "বিল ভাগ করুন (সংখ্যা)",
+                tip_calc_btn: "হিসাব করুন",
+                tip_err: "সঠিক ইনপুট দিন",
+                tip_amount: "টিপের পরিমাণ:",
+                tip_total_bill: "মোট বিল (টিপ সহ):",
+                tip_per_person: "প্রতিজনের পরিমাণ:",
+
+                conv_val: "মান",
+                conv_from: "থেকে",
+                conv_to: "পর্যন্ত",
+                conv_calc_btn: "রূপান্তর করুন",
+                conv_err: "একটি মান দিন",
+            }
+        };
+
+        const toNum = v => {
+            const n = parseFloat(String(v).replace(/,/g, ''));
+            return Number.isFinite(n) ? n : NaN;
+        };
+
+        const menu = document.getElementById('menu');
+        const main = document.getElementById('main');
+        const langButtons = document.querySelectorAll('.lang-switcher button');
+        const headerTitle = document.getElementById('main-header');
+
+        function updateText() {
+            const lang = translations[currentLang];
+            if (!lang) return;
+
+            headerTitle.textContent = lang.header;
+
+            menu.querySelectorAll('button').forEach(btn => {
+                const key = btn.getAttribute('data-text-key');
+                if (key && lang[key]) {
+                    btn.textContent = lang[key];
+                }
+            });
+
+            const activeCal = menu.querySelector('button.active').dataset.cal;
+            render(activeCal);
+        }
+
+        const templates = {
+            basic: () => {
+                const lang = translations[currentLang];
+                const el = document.createElement('div');
+                el.innerHTML = `
+                    <h2>${lang.basic_btn}</h2>
+                    <p class="small">${lang.basic_desc}</p>
+                    <div id="basic-calculator">
+                        <div class="display">0</div>
+                        <button class="clear">AC</button>
+                        <button class="clear-one">C</button>
+                        <button class="operator">%</button>
+                        <button class="operator">/</button>
+                        <button>7</button><button>8</button><button>9</button><button class="operator">*</button>
+                        <button>4</button><button>5</button><button>6</button><button class="operator">-</button>
+                        <button>1</button><button>2</button><button>3</button><button class="operator">+</button>
+                        <button style="grid-column: span 2;">0</button><button>.</button><button class="equal">=</button>
+                    </div>
+                `;
+                const display = el.querySelector('.display');
+                let currentInput = '0';
+                let firstOperand = null;
+                let operator = null;
+                let waitingForSecondOperand = false;
+
+                function updateDisplay(value) {
+                    display.textContent = value;
+                }
+                updateDisplay(currentInput);
+
+                el.addEventListener('click', (event) => {
+                    const target = event.target;
+                    if (!target.matches('button')) return;
+
+                    const value = target.textContent;
+                    
+                    if (target.classList.contains('clear')) {
+                        currentInput = '0';
+                        firstOperand = null;
+                        operator = null;
+                        waitingForSecondOperand = false;
+                        updateDisplay(currentInput);
+                        return;
+                    }
+                    if (target.classList.contains('clear-one')) {
+                        currentInput = currentInput.slice(0, -1) || '0';
+                        updateDisplay(currentInput);
+                        return;
+                    }
+
+                    if (target.classList.contains('operator')) {
+                        handleOperator(target.textContent);
+                        return;
+                    }
+                    if (target.classList.contains('equal')) {
+                        handleOperator('=');
+                        return;
+                    }
+
+                    if (waitingForSecondOperand) {
+                        currentInput = value;
+                        waitingForSecondOperand = false;
+                    } else {
+                        currentInput = currentInput === '0' ? value : currentInput + value;
+                    }
+                    updateDisplay(currentInput);
+                });
+
+                function handleOperator(nextOperator) {
+                    const inputValue = parseFloat(currentInput);
+                    
+                    if (operator && waitingForSecondOperand) {
+                        operator = nextOperator;
+                        updateDisplay(String(firstOperand) + ' ' + nextOperator);
+                        return;
+                    }
+                    if (firstOperand === null) {
+                        firstOperand = inputValue;
+                    } else if (operator) {
+                        const result = performCalculation(firstOperand, inputValue, operator);
+                        currentInput = String(result);
+                        firstOperand = result;
+                    }
+                    
+                    waitingForSecondOperand = true;
+                    if (nextOperator !== '=') {
+                        operator = nextOperator;
+                        updateDisplay(String(firstOperand) + ' ' + nextOperator);
+                    } else {
+                        operator = null;
+                        updateDisplay(currentInput);
+                    }
+                }
+
+                function performCalculation(first, second, op) {
+                    if (op === '+') return first + second;
+                    if (op === '-') return first - second;
+                    if (op === '*') return first * second;
+                    if (op === '/') return first / second;
+                    if (op === '%') return first / 100 * second;
+                    return second;
+                }
+
+                return el;
+            },
+
+            scientific: () => {
+                const lang = translations[currentLang];
+                const el = document.createElement('div');
+                el.innerHTML = `
+                    <h2>${lang.scientific_btn}</h2>
+                    <p class="small">${lang.scientific_desc}</p>
+                    <div id="scientific-calculator">
+                        <div class="display">0</div>
+                        <button class="clear">AC</button>
+                        <button class="clear-one">C</button>
+                        <button class="fn">^</button>
+                        <button class="operator">/</button>
+
+                        <button class="fn">sin</button><button class="fn">cos</button><button class="fn">tan</button><button class="operator">*</button>
+                        <button class="fn">√</button><button class="fn">log</button><button>E</button><button class="operator">-</button>
+                        <button>7</button><button>8</button><button>9</button><button class="operator">+</button>
+                        <button>4</button><button>5</button><button>6</button><button>.</button>
+                        <button>1</button><button>2</button><button>3</button><button class="equal" style="grid-row: span 2;">=</button>
+                        <button class="wide">0</button><button>(</button><button>)</button>
+                    </div>
+                `;
+                const display = el.querySelector('.display');
+                let expression = '';
+
+                function updateDisplay(value) {
+                    display.textContent = value || '0';
+                }
+                updateDisplay(expression);
+
+                el.addEventListener('click', (event) => {
+                    const target = event.target;
+                    if (!target.matches('button')) return;
+
+                    const value = target.textContent;
+                    
+                    if (value === 'AC') {
+                        expression = '';
+                    } else if (value === 'C') {
+                        expression = expression.slice(0, -1);
+                    } else if (value === '=') {
+                        try {
+                            let parsedExpression = expression;
+                            parsedExpression = parsedExpression.replace(/sin(\d+(\.\d+)?)/g, 'Math.sin(Math.radians($1))');
+                            parsedExpression = parsedExpression.replace(/cos(\d+(\.\d+)?)/g, 'Math.cos(Math.radians($1))');
+                            parsedExpression = parsedExpression.replace(/tan(\d+(\.\d+)?)/g, 'Math.tan(Math.radians($1))');
+                            parsedExpression = parsedExpression.replace(/√(\d+(\.\d+)?)/g, 'Math.sqrt($1)');
+
+                            const result = eval(parsedExpression.replace('^', '**').replace('√', 'Math.sqrt').replace('log', 'Math.log10').replace('E', 'Math.E'));
+                            expression = String(result);
+                        } catch (e) {
+                            expression = 'Error';
+                        }
+                    } else {
+                        expression += value;
+                    }
+                    updateDisplay(expression);
+                });
+                return el;
+            },
+
+            emi: () => {
+                const lang = translations[currentLang];
+                const el = document.createElement('div');
+                el.innerHTML = `
+                    <h2>${lang.emi_title}</h2>
+                    <p class="small">${lang.emi_desc}</p>
+                    <div class="card">
+                        <label>${lang.emi_principal}</label>
+                        <input id="emi-principal" placeholder="${lang.emi_principal_ph}" />
+                    </div>
+                    <div class="row card">
+                        <div>
+                            <label>${lang.emi_rate}</label>
+                            <input id="emi-rate" placeholder="${lang.emi_rate_ph}" />
+                        </div>
+                        <div>
+                            <label>${lang.emi_tenure}</label>
+                            <input id="emi-tenure" placeholder="${lang.emi_tenure_ph}" />
+                        </div>
+                    </div>
+                    <button id="emi-calc" class="btn">${lang.emi_calc_btn}</button>
+                    <div id="emi-result" class="result" style="display:none"></div>
+                `;
+                el.querySelector('#emi-calc').addEventListener('click', () => {
+                    const P = toNum(el.querySelector('#emi-principal').value);
+                    const annualRate = toNum(el.querySelector('#emi-rate').value);
+                    const n = Math.floor(toNum(el.querySelector('#emi-tenure').value));
+                    if (!P || !annualRate || !n || n<=0) {
+                        showResult('emi-result', lang.emi_err);
+                        return;
+                    }
+                    const r = annualRate/100/12;
+                    const factor = Math.pow(1+r, n);
+                    const E = P * r * factor / (factor - 1);
+                    const total = E * n;
+                    const interest = total - P;
+                    showResult('emi-result', `
+                        ${lang.emi_monthly} ₹${E.toFixed(2)}<br>
+                        ${lang.emi_total} ₹${total.toFixed(2)}<br>
+                        ${lang.emi_interest} ₹${interest.toFixed(2)}
+                    `);
+                });
+                return el;
+            },
+
+            bmi: () => {
+                const lang = translations[currentLang];
+                const el = document.createElement('div');
+                el.innerHTML = `
+                    <h2>${lang.bmi_title}</h2>
+                    <p class="small">${lang.bmi_desc}</p>
+                    <div class="row card">
+                        <div>
+                            <label>${lang.bmi_weight}</label>
+                            <input id="bmi-weight" placeholder="${lang.bmi_weight_ph}" />
+                        </div>
+                        <div>
+                            <label>${lang.bmi_height}</label>
+                            <input id="bmi-height" placeholder="${lang.bmi_height_ph}" />
+                        </div>
+                    </div>
+                    <button id="bmi-calc" class="btn">${lang.bmi_calc_btn}</button>
+                    <div id="bmi-result" class="result" style="display:none"></div>
+                `;
+                el.querySelector('#bmi-calc').addEventListener('click', () => {
+                    const kg = toNum(el.querySelector('#bmi-weight').value);
+                    const cm = toNum(el.querySelector('#bmi-height').value);
+                    if (!kg || !cm) { showResult('bmi-result', lang.bmi_err); return; }
+                    const m = cm/100;
+                    const bmi = kg / (m*m);
+                    let cat = '';
+                    if (bmi < 18.5) cat = lang.bmi_underweight;
+                    else if (bmi < 25) cat = lang.bmi_normal;
+                    else if (bmi < 30) cat = lang.bmi_overweight;
+                    else cat = lang.bmi_obese;
+                    showResult('bmi-result', `BMI = ${bmi.toFixed(2)} — ${cat}`);
+                });
+                return el;
+            },
+
+            bmr: () => {
+                const lang = translations[currentLang];
+                const el = document.createElement('div');
+                el.innerHTML = `
+                    <h2>${lang.bmr_title}</h2>
+                    <p class="small">${lang.bmr_desc}</p>
+                    <div class="card"><label>${lang.bmr_weight}</label><input id="bmr-weight" type="number" /></div>
+                    <div class="card"><label>${lang.bmr_height}</label><input id="bmr-height" type="number" /></div>
+                    <div class="card"><label>${lang.bmr_age}</label><input id="bmr-age" type="number" /></div>
+                    <div class="card">
+                        <label>${lang.bmr_gender}</label>
+                        <select id="bmr-gender">
+                            <option value="male">${lang.bmr_male}</option>
+                            <option value="female">${lang.bmr_female}</option>
+                        </select>
+                    </div>
+                    <button id="bmr-calc" class="btn">${lang.bmr_calc_btn}</button>
+                    <div id="bmr-result" class="result" style="display:none"></div>
+                `;
+                el.querySelector('#bmr-calc').addEventListener('click', () => {
+                    const weight = toNum(el.querySelector('#bmr-weight').value);
+                    const height = toNum(el.querySelector('#bmr-height').value);
+                    const age = toNum(el.querySelector('#bmr-age').value);
+                    const gender = el.querySelector('#bmr-gender').value;
+
+                    if (!weight || !height || !age) {
+                        showResult('bmr-result', lang.bmr_err);
+                        return;
+                    }
+                    
+                    let bmr;
+                    if (gender === 'male') {
+                        bmr = 88.362 + (13.397 * weight) + (4.799 * height) - (5.677 * age);
+                    } else {
+                        bmr = 447.593 + (9.247 * weight) + (3.098 * height) - (4.330 * age);
+                    }
+
+                    showResult('bmr-result', `${lang.bmr_result} ${bmr.toFixed(2)}`);
+                });
+                return el;
+            },
+
+            age: () => {
+                const lang = translations[currentLang];
+                const el = document.createElement('div');
+                el.innerHTML = `
+                    <h2>${lang.age_title}</h2>
+                    <p class="small">${lang.age_desc}</p>
+                    <div class="card"><label>${lang.age_dob}</label><input id="age-dob" type="date" /></div>
+                    <div class="card"><label>${lang.age_today}</label><input id="age-today" type="date" /></div>
+                    <button id="age-calc" class="btn">${lang.age_calc_btn}</button>
+                    <div id="age-result" class="result" style="display:none"></div>
+                `;
+                el.querySelector('#age-calc').addEventListener('click', () => {
+                    const dob = el.querySelector('#age-dob').value;
+                    const today = el.querySelector('#age-today').value;
+                    if (!dob || !today) {
+                        showResult('age-result', lang.age_err);
+                        return;
+                    }
+                    const dobDate = new Date(dob);
+                    const todayDate = new Date(today);
+                    if (dobDate > todayDate) {
+                        showResult('age-result', lang.age_err);
+                        return;
+                    }
+
+                    const diff = todayDate - dobDate;
+                    const totalDays = Math.floor(diff / (1000 * 60 * 60 * 24));
+                    const years = Math.floor(totalDays / 365.25);
+                    const remainingDaysAfterYears = totalDays % 365.25;
+                    const months = Math.floor(remainingDaysAfterYears / 30.4375);
+                    const days = Math.floor(remainingDaysAfterYears % 30.4375);
+
+                    const result = lang.age_result.replace('{years}', years).replace('{months}', months).replace('{days}', days);
+                    showResult('age-result', result);
+                });
+                el.querySelector('#age-today').valueAsDate = new Date();
+                return el;
+            },
+
+            gst: () => {
+                const lang = translations[currentLang];
+                const el = document.createElement('div');
+                el.innerHTML = `
+                    <h2>${lang.gst_title}</h2>
+                    <p class="small">${lang.gst_desc}</p>
+                    <div class="card"><label>${lang.gst_amount}</label><input id="gst-amount" type="number" /></div>
+                    <div class="card"><label>${lang.gst_rate}</label><input id="gst-rate" type="number" /></div>
+                    <div class="two-column-card card">
+                        <button id="gst-add" class="btn">${lang.gst_add}</button>
+                        <button id="gst-remove" class="btn">${lang.gst_remove}</button>
+                    </div>
+                    <div id="gst-result" class="result" style="display:none"></div>
+                `;
+                el.querySelector('#gst-add').addEventListener('click', () => {
+                    const amount = toNum(el.querySelector('#gst-amount').value);
+                    const rate = toNum(el.querySelector('#gst-rate').value);
+                    if (!amount || !rate) { showResult('gst-result', lang.gst_err); return; }
+                    const gst_amount = amount * (rate / 100);
+                    const total_amount = amount + gst_amount;
+                    showResult('gst-result', `
+                        ${lang.gst_net} ${amount.toFixed(2)}<br>
+                        ${lang.gst_gst_amount} ${gst_amount.toFixed(2)}<br>
+                        ${lang.gst_total} ${total_amount.toFixed(2)}
+                    `);
+                });
+                el.querySelector('#gst-remove').addEventListener('click', () => {
+                    const amount = toNum(el.querySelector('#gst-amount').value);
+                    const rate = toNum(el.querySelector('#gst-rate').value);
+                    if (!amount || !rate) { showResult('gst-result', lang.gst_err); return; }
+                    const net_amount = amount / (1 + rate / 100);
+                    const gst_amount = amount - net_amount;
+                    showResult('gst-result', `
+                        ${lang.gst_net} ${net_amount.toFixed(2)}<br>
+                        ${lang.gst_gst_amount} ${gst_amount.toFixed(2)}<br>
+                        ${lang.gst_total} ${amount.toFixed(2)}
+                    `);
+                });
+                return el;
+            },
+
+            discount: () => {
+                const lang = translations[currentLang];
+                const el = document.createElement('div');
+                el.innerHTML = `
+                    <h2>${lang.discount_title}</h2>
+                    <p class="small">${lang.discount_desc}</p>
+                    <div class="card"><label>${lang.discount_price}</label><input id="discount-price" type="number" /></div>
+                    <div class="card"><label>${lang.discount_percent}</label><input id="discount-percent" placeholder="${lang.discount_percent_ph}" type="number" /></div>
+                    <button id="discount-calc" class="btn">${lang.discount_calc_btn}</button>
+                    <div id="discount-result" class="result" style="display:none"></div>
+                `;
+                el.querySelector('#discount-calc').addEventListener('click', () => {
+                    const price = toNum(el.querySelector('#discount-price').value);
+                    const percent = toNum(el.querySelector('#discount-percent').value);
+                    if (!price || !percent) { showResult('discount-result', lang.discount_err); return; }
+                    const discount_amount = price * (percent / 100);
+                    const final_price = price - discount_amount;
+                    showResult('discount-result', `
+                        ${lang.discount_final} ${final_price.toFixed(2)}<br>
+                        ${lang.discount_amount} ${discount_amount.toFixed(2)}
+                    `);
+                });
+                return el;
+            },
+
+            "simple-interest": () => {
+                const lang = translations[currentLang];
+                const el = document.createElement('div');
+                el.innerHTML = `
+                    <h2>${lang.si_title}</h2>
+                    <p class="small">${lang.si_desc}</p>
+                    <div class="card"><label>${lang.si_principal}</label><input id="si-principal" type="number" /></div>
+                    <div class="card"><label>${lang.si_rate}</label><input id="si-rate" type="number" /></div>
+                    <div class="card"><label>${lang.si_time}</label><input id="si-time" type="number" /></div>
+                    <button id="si-calc" class="btn">${lang.si_calc_btn}</button>
+                    <div id="si-result" class="result" style="display:none"></div>
+                `;
+                el.querySelector('#si-calc').addEventListener('click', () => {
+                    const P = toNum(el.querySelector('#si-principal').value);
+                    const R = toNum(el.querySelector('#si-rate').value);
+                    const T = toNum(el.querySelector('#si-time').value);
+                    if (!P || !R || !T) { showResult('si-result', lang.si_err); return; }
+                    const interest = (P * R * T) / 100;
+                    const total = P + interest;
+                    showResult('si-result', `
+                        ${lang.si_interest} ${interest.toFixed(2)}<br>
+                        ${lang.si_total} ${total.toFixed(2)}
+                    `);
+                });
+                return el;
+            },
+
+            tip: () => {
+                const lang = translations[currentLang];
+                const el = document.createElement('div');
+                el.innerHTML = `
+                    <h2>${lang.tip_title}</h2>
+                    <p class="small">${lang.tip_desc}</p>
+                    <div class="card"><label>${lang.tip_bill}</label><input id="tip-bill" type="number" /></div>
+                    <div class="card"><label>${lang.tip_tip_per}</label><input id="tip-tip-per" type="number" /></div>
+                    <div class="card"><label>${lang.tip_split}</label><input id="tip-split" type="number" value="1" min="1" /></div>
+                    <button id="tip-calc" class="btn">${lang.tip_calc_btn}</button>
+                    <div id="tip-result" class="result" style="display:none"></div>
+                `;
+                el.querySelector('#tip-calc').addEventListener('click', () => {
+                    const bill = toNum(el.querySelector('#tip-bill').value);
+                    const tip_per = toNum(el.querySelector('#tip-tip-per').value);
+                    const split = toNum(el.querySelector('#tip-split').value);
+                    if (!bill || !tip_per || !split || split <= 0) { showResult('tip-result', lang.tip_err); return; }
+                    const tip_amount = bill * (tip_per / 100);
+                    const total_bill = bill + tip_amount;
+                    const per_person = total_bill / split;
+                    showResult('tip-result', `
+                        ${lang.tip_amount} ${tip_amount.toFixed(2)}<br>
+                        ${lang.tip_total_bill} ${total_bill.toFixed(2)}<br>
+                        ${lang.tip_per_person} ${per_person.toFixed(2)}
+                    `);
+                });
+                return el;
+            },
+
+            temp: () => {
+                const lang = translations[currentLang];
+                const units = {
+                    celsius: 'Celsius', fahrenheit: 'Fahrenheit', kelvin: 'Kelvin'
+                };
+                const el = createConverter(
+                    'temp',
+                    lang.temp_btn,
+                    lang.temp_desc,
+                    units,
+                    (val, from, to) => {
+                        if (from === to) return val;
+                        let res;
+                        if (from === 'celsius') {
+                            if (to === 'fahrenheit') res = val * 9/5 + 32;
+                            if (to === 'kelvin') res = val + 273.15;
+                        } else if (from === 'fahrenheit') {
+                            if (to === 'celsius') res = (val - 32) * 5/9;
+                            if (to === 'kelvin') res = (val - 32) * 5/9 + 273.15;
+                        } else if (from === 'kelvin') {
+                            if (to === 'celsius') res = val - 273.15;
+                            if (to === 'fahrenheit') res = (val - 273.15) * 9/5 + 32;
+                        }
+                        return res.toFixed(2);
+                    }
+                );
+                return el;
+            },
+
+            length: () => {
+                const lang = translations[currentLang];
+                const units = {
+                    meters: 'Meters', feet: 'Feet', inches: 'Inches', centimeters: 'Centimeters', kilometers: 'Kilometers', miles: 'Miles'
+                };
+                const el = createConverter(
+                    'length',
+                    lang.length_btn,
+                    lang.length_desc,
+                    units,
+                    (val, from, to) => {
+                        const conversions = {
+                            meters: {
+                                feet: val * 3.28084, inches: val * 39.3701, centimeters: val * 100, kilometers: val / 1000, miles: val / 1609.34
+                            },
+                            feet: {
+                                meters: val / 3.28084, inches: val * 12, centimeters: val * 30.48, kilometers: val / 3280.84, miles: val / 5280
+                            },
+                            inches: {
+                                meters: val / 39.3701, feet: val / 12, centimeters: val * 2.54, kilometers: val / 39370.1, miles: val / 63360
+                            },
+                            centimeters: {
+                                meters: val / 100, feet: val / 30.48, inches: val / 2.54, kilometers: val / 100000, miles: val / 160934
+                            },
+                            kilometers: {
+                                meters: val * 1000, feet: val * 3280.84, inches: val * 39370.1, centimeters: val * 100000, miles: val / 1.60934
+                            },
+                            miles: {
+                                meters: val * 1609.34, feet: val * 5280, inches: val * 63360, centimeters: val * 160934, kilometers: val * 1.60934
+                            }
+                        };
+                        return conversions[from][to] ? conversions[from][to].toFixed(4) : val.toFixed(4);
+                    }
+                );
+                return el;
+            },
+
+            area: () => {
+                const lang = translations[currentLang];
+                const units = {
+                    sq_meters: 'Square Meters', sq_feet: 'Square Feet', acres: 'Acres', hectares: 'Hectares'
+                };
+                const el = createConverter(
+                    'area',
+                    lang.area_btn,
+                    lang.area_desc,
+                    units,
+                    (val, from, to) => {
+                        const conversions = {
+                            sq_meters: {
+                                sq_feet: val * 10.7639, acres: val / 4046.86, hectares: val / 10000
+                            },
+                            sq_feet: {
+                                sq_meters: val / 10.7639, acres: val / 43560, hectares: val / 107639
+                            },
+                            acres: {
+                                sq_meters: val * 4046.86, sq_feet: val * 43560, hectares: val / 2.471
+                            },
+                            hectares: {
+                                sq_meters: val * 10000, sq_feet: val * 107639, acres: val * 2.471
+                            }
+                        };
+                        return conversions[from][to] ? conversions[from][to].toFixed(4) : val.toFixed(4);
+                    }
+                );
+                return el;
+            },
+
+            volume: () => {
+                const lang = translations[currentLang];
+                const units = {
+                    cubic_meters: 'Cubic Meters', liters: 'Liters', gallons: 'Gallons', cubic_feet: 'Cubic Feet'
+                };
+                const el = createConverter(
+                    'volume',
+                    lang.volume_btn,
+                    lang.volume_desc,
+                    units,
+                    (val, from, to) => {
+                        const conversions = {
+                            cubic_meters: {
+                                liters: val * 1000, gallons: val * 264.172, cubic_feet: val * 35.3147
+                            },
+                            liters: {
+                                cubic_meters: val / 1000, gallons: val / 3.78541, cubic_feet: val / 28.317
+                            },
+                            gallons: {
+                                cubic_meters: val / 264.172, liters: val * 3.78541, cubic_feet: val / 7.48052
+                            },
+                            cubic_feet: {
+                                cubic_meters: val / 35.3147, liters: val * 28.317, gallons: val * 7.48052
+                            }
+                        };
+                        return conversions[from][to] ? conversions[from][to].toFixed(4) : val.toFixed(4);
+                    }
+                );
+                return el;
+            },
+
+            mass: () => {
+                const lang = translations[currentLang];
+                const units = {
+                    kilograms: 'Kilograms', grams: 'Grams', pounds: 'Pounds', ounces: 'Ounces'
+                };
+                const el = createConverter(
+                    'mass',
+                    lang.mass_btn,
+                    lang.mass_desc,
+                    units,
+                    (val, from, to) => {
+                        const conversions = {
+                            kilograms: {
+                                grams: val * 1000, pounds: val * 2.20462, ounces: val * 35.274
+                            },
+                            grams: {
+                                kilograms: val / 1000, pounds: val / 453.592, ounces: val / 28.3495
+                            },
+                            pounds: {
+                                kilograms: val / 2.20462, grams: val * 453.592, ounces: val * 16
+                            },
+                            ounces: {
+                                kilograms: val / 35.274, grams: val * 28.3495, pounds: val / 16
+                            }
+                        };
+                        return conversions[from][to] ? conversions[from][to].toFixed(4) : val.toFixed(4);
+                    }
+                );
+                return el;
+            },
+
+            speed: () => {
+                const lang = translations[currentLang];
+                const units = {
+                    kph: 'Kilometers per hour', mph: 'Miles per hour', mps: 'Meters per second'
+                };
+                const el = createConverter(
+                    'speed',
+                    lang.speed_btn,
+                    lang.speed_desc,
+                    units,
+                    (val, from, to) => {
+                        const conversions = {
+                            kph: {
+                                mph: val * 0.621371, mps: val / 3.6
+                            },
+                            mph: {
+                                kph: val / 0.621371, mps: val / 2.237
+                            },
+                            mps: {
+                                kph: val * 3.6, mph: val * 2.237
+                            }
+                        };
+                        return conversions[from][to] ? conversions[from][to].toFixed(4) : val.toFixed(4);
+                    }
+                );
+                return el;
+            },
+
+            data: () => {
+                const lang = translations[currentLang];
+                const units = {
+                    bit: 'Bit', byte: 'Byte', kb: 'Kilobyte', mb: 'Megabyte', gb: 'Gigabyte'
+                };
+                const el = createConverter(
+                    'data',
+                    lang.data_btn,
+                    lang.data_desc,
+                    units,
+                    (val, from, to) => {
+                        const toBase = (value, unit) => {
+                            const unitMap = {
+                                bit: 1, byte: 8, kb: 8 * 1024, mb: 8 * 1024 * 1024, gb: 8 * 1024 * 1024 * 1024
+                            };
+                            return value * unitMap[unit];
+                        };
+                        const fromBase = (value, unit) => {
+                            const unitMap = {
+                                bit: 1, byte: 8, kb: 8 * 1024, mb: 8 * 1024 * 1024, gb: 8 * 1024 * 1024 * 1024
+                            };
+                            return value / unitMap[unit];
+                        };
+                        const baseValue = toBase(val, from);
+                        return fromBase(baseValue, to).toFixed(4);
+                    }
+                );
+                return el;
+            },
+            
+            blog: () => {
+                const lang = translations[currentLang];
+                const el = document.createElement('div');
+                el.innerHTML = `
+                    <div class="page-content">
+                        <h1>${lang.blog_title}</h1>
+                        <p>${lang.blog_desc}</p>
+                    </div>
+                    <div class="card blog-post">
+                        <h3><a href="#">${lang.blog_post_emi_title}</a></h3>
+                        <p>${lang.blog_post_emi_p}</p>
+                    </div>
+                    <div class="card blog-post">
+                        <h3><a href="#">${lang.blog_post_bmi_title}</a></h3>
+                        <p>${lang.blog_post_bmi_p}</p>
+                    </div>
+                    <div class="card blog-post">
+                        <h3><a href="#">${lang.blog_post_age_title}</a></h3>
+                        <p>${lang.blog_post_age_p}</p>
+                    </div>
+                    <div class="card blog-post">
+                        <h3><a href="#">${lang.blog_post_cal_title}</a></h3>
+                        <p>${lang.blog_post_cal_desc}</p>
+                    </div>
+                    <div class="card blog-post">
+                        <h3><a href="#">${lang.blog_post_gst_title}</a></h3>
+                        <p>${lang.blog_post_gst_p}</p>
+                    </div>
+                    <div class="card blog-post">
+                        <h3><a href="#">${lang.blog_post_discount_title}</a></h3>
+                        <p>${lang.blog_post_discount_p}</p>
+                    </div>
+                    <div class="card blog-post">
+                        <h3><a href="#">${lang.blog_post_si_title}</a></h3>
+                        <p>${lang.blog_post_si_p}</p>
+                    </div>
+                    <div class="card blog-post">
+                        <h3><a href="#">${lang.blog_post_tip_title}</a></h3>
+                        <p>${lang.blog_post_tip_p}</p>
+                    </div>
+                    <div class="card blog-post">
+                        <h3><a href="#">${lang.blog_post_bmr_title}</a></h3>
+                        <p>${lang.blog_post_bmr_p}</p>
+                    </div>
+                    <div class="card blog-post">
+                        <h3><a href="#">${lang.blog_post_unit_title}</a></h3>
+                        <p>${lang.blog_post_unit_p}</p>
+                    </div>
+                    <div class="card blog-post">
+                        <h3><a href="#">${lang.blog_post_scientific_title}</a></h3>
+                        <p>${lang.blog_post_scientific_p}</p>
+                    </div>
+                `;
+                return el;
+            },
+
+            about: () => {
+                const lang = translations[currentLang];
+                const el = document.createElement('div');
+                el.innerHTML = `
+                    <div class="page-content">
+                        <h1>${lang.about_title}</h1>
+                        <p>${lang.about_p1}</p>
+                        <p>${lang.about_p2}</p>
+                        <p>${lang.about_p3}</p>
+                        <p>${lang.about_p4}</p>
+                    </div>
+                `;
+                return el;
+            },
+
+            contact: () => {
+                const lang = translations[currentLang];
+                const el = document.createElement('div');
+                el.innerHTML = `
+                    <div class="page-content">
+                        <h1>${lang.contact_page_title}</h1>
+                        <p>${lang.contact_desc}</p>
+                        
+                        <div class="contact-form">
+                            <h2>${lang.contact_form_title}</h2>
+                            <p>${lang.contact_form_p}</p>
+                            <form action="mailto:soumyakoley23@gmail.com" method="post" enctype="text/plain">
+                                <label for="name">${lang.contact_name}</label>
+                                <input type="text" id="name" name="name" required>
+                                
+                                <label for="email">${lang.contact_email}</label>
+                                <input type="email" id="email" name="email" required>
+                                
+                                <label for="message">${lang.contact_message}</label>
+                                <textarea id="message" name="message" rows="5" required></textarea>
+                                
+                                <button type="submit">${lang.contact_send_btn}</button>
+                            </form>
+                        </div>
+
+                        <div class="social-links">
+                            <h2>${lang.contact_other_ways_title}</h2>
+                            <p>${lang.contact_other_ways_p}</p>
+                            <a href="https://www.facebook.com" target="_blank">Facebook</a> |
+                            <a href="https://www.twitter.com" target="_blank">Twitter</a> |
+                            <a href="https://www.linkedin.com" target="_blank">LinkedIn</a>
+                        </div>
+                    </div>
+                `;
+                return el;
+            }
+        };
+
+        const createConverter = (calName, title, description, units, converterFn) => {
+            const lang = translations[currentLang];
+            const el = document.createElement('div');
+            const unitOptions = Object.entries(units).map(([key, value]) => `<option value="${key}">${value}</option>`).join('');
+
+            el.innerHTML = `
+                <h2>${title}</h2>
+                <p class="small">${description}</p>
+                <div class="card">
+                    <label>${lang.conv_val}</label>
+                    <input id="${calName}-value" type="number" />
+                </div>
+                <div class="row card">
+                    <div>
+                        <label>${lang.conv_from}</label>
+                        <select id="${calName}-from">${unitOptions}</select>
+                    </div>
+                    <div>
+                        <label>${lang.conv_to}</label>
+                        <select id="${calName}-to">${unitOptions}</select>
+                    </div>
+                </div>
+                <button id="${calName}-calc" class="btn">${lang.conv_calc_btn}</button>
+                <div id="${calName}-result" class="result" style="display:none"></div>
+            `;
+
+            el.querySelector(`#${calName}-calc`).addEventListener('click', () => {
+                const val = toNum(el.querySelector(`#${calName}-value`).value);
+                const from = el.querySelector(`#${calName}-from`).value;
+                const to = el.querySelector(`#${calName}-to`).value;
+                if (!val) { showResult(`${calName}-result`, lang.conv_err); return; }
+                const result = converterFn(val, from, to);
+                showResult(`${calName}-result`, `${result} ${units[to]}`);
+            });
+            return el;
+        };
+
+        function showResult(id, html) {
+            const resultEl = document.getElementById(id);
+            resultEl.innerHTML = html;
+            resultEl.style.display = 'block';
+        }
+        
+        function render(calculatorName) {
+            main.innerHTML = '';
+            const calculatorElement = templates[calculatorName]();
+            main.appendChild(calculatorElement);
+        }
+
+        langButtons.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                langButtons.forEach(b => b.classList.remove('active'));
+                e.target.classList.add('active');
+                currentLang = e.target.dataset.lang;
+                updateText();
+            });
+        });
+
+        menu.addEventListener('click', (e) => {
+            const target = e.target.closest('button');
+            if (target) {
+                menu.querySelectorAll('button').forEach(btn => btn.classList.remove('active'));
+                target.classList.add('active');
+                if (target.dataset.cal) {
+                    render(target.dataset.cal);
+                }
+            }
+        });
+
+        render('basic');
+    </script>
+    <script>
+        if (typeof Math.radians === 'undefined') {
+            Math.radians = function(degrees) {
+                return degrees * Math.PI / 180;
+            };
+        }
+    </script>
+</body>
+</html>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="refresh" content="0; url=https://soumyakoley23.github.io/CalcMate-Pro/">
+    <title>Redirecting...</title>
+</head>
+<body>
+    <p>Apnar browser-ke Calculator page-e niye jawa hocche. Jodi apnake na niye jawa hoy, tahole <a href="https://soumyakoley23.github.io/CalcMate-Pro/">ei link-e click korun</a>.</p>
+</body>
+</html>
